@@ -1,0 +1,23 @@
+@use './scss/mixin' as mix;
+@use './scss/variables' as var;
+
+.mainSec{
+  color: aqua;
+  @include mix.flex(center, center);
+  background-color: var.$theme;
+  // background-color: rgb(250, 250, 250);
+  height: auto;
+  min-height: 100vh;
+  width: 100vw;
+  h1{
+    color: red;
+  }
+}
+
+.todoSection{
+  background-color: var.$theme;
+  // background-color: rgb(250, 250, 250);
+  height: auto;
+  width: 27vw;
+  @include mix.flex(center,center);
+}

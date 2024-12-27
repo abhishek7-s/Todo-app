@@ -1,0 +1,7 @@
+@mixin flex($pr1 , $pr2){
+    display: flex;
+    justify-content: $pr1;
+    align-items: $pr2;
+    flex-direction: column;
+  }
+  

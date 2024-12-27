@@ -1,0 +1,187 @@
+@use '../scss/mixin' as mix;
+
+@use '../scss/variables' as var;
+
+.mainBody{
+    // background-color: rgb(255, 255, 255);
+    // background-color: black;
+    width: 100%;
+    min-height: 80vh;
+    height: auto;
+    position: relative;
+    color: var.$theme-color;
+    border: 1px solid gray;
+    // border: none;
+    border-radius: 25px;
+    box-shadow: 5px 5px 30px rgb(62, 62, 62);
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    .topSec{
+        // background-color: antiquewhite;
+        // height: 3rem;
+        display: flex;
+        // justify-content: space-evenly;
+        align-items: center; 
+        padding: 5px 20px;
+        font-size:small;
+        .Icon{
+            color: rgb(7, 48, 53);
+            font-size: xx-large;
+        }
+
+    }
+    
+    .addSec{
+        height: 3rem;
+        position: relative;
+        width: 100%;
+        padding: 0.5em 0;
+
+        .css-iwOAeq{
+            border: none;
+        }
+        .css-ftbjrj{
+            border: none;
+        }
+        
+        input{
+            position: absolute;
+            right: 10px;
+            width: 90%;
+            // height: 80%;
+            border: 2px solid var.$primary-color;
+            // border: none;
+            background-color: rgba($color: #ffffff, $alpha: 1);
+            padding: 16px 30px;
+            border-radius: 50px;
+            
+        }
+
+        button{
+            position: absolute;
+            // right: 18px;
+            // height: 60%;
+            // width: 20px;
+            // top: 21%;
+            right: 15px;
+            height: 49px;
+            width: 55px;
+            top: 20%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background-color: var.$primary-color;
+            font-size: x-large;
+            @include mix.flex(center, center);
+        }
+
+    }
+
+    .bottomSec{
+        // background-color:chartreuse ;
+        min-height: calc(80vh - 6rem);
+        height: auto;
+        @include mix.flex(start,center);
+
+
+        h3{
+            font-size:large;
+            padding: 5px 10px;
+            width: 90%;
+
+        }
+        .list{
+            
+            // background-color: crimson;
+            width: 90%;
+            height: 65px;
+            border: 2px solid gray;
+            border-radius: 15px;
+            margin: 5px  0;
+            padding: 0 10px;
+            // @include mix.flex(start,center);
+            display: flex;
+
+            .left{
+                // background-color: aquamarine;
+                height: 100%;
+                width: 10%;
+                @include mix.flex(center,center);
+
+                input{
+                    width: 40px;
+                    height: 17px;
+                    background-color: transparent;
+                    accent-color: var.$primary-color;
+                }
+            }
+            
+            .middle{
+                // background-color: palegreen;
+                height: 100%;
+                width: 100%;
+                @include mix.flex(center,start);
+                color: var.$theme-color;
+                padding-left: 10px;
+
+                h2{
+                    font-size:large;
+                }
+
+
+
+            }
+
+            .right{
+                @include mix.flex(space-around,center);
+                font-size: large;
+                padding: 2px 10px;
+                margin: 1px;
+                color: rgb(239, 63, 63);
+                
+                .deleteBtn{
+                    padding-right: 5px;
+                }
+
+                .deleteBtn:hover{
+                    font-size: large;
+                    color: rgb(87, 5, 5);
+                    transition: all 0.15s ease-in-out;
+                }
+
+                .editBtn{
+                    color: rgb(50, 138, 176);
+                    font-size: larger;
+                    
+                }
+                .editBtn:hover{
+                    // font-size: larger;
+                    color: rgb(28, 18, 137);
+                    transition: all 0.15s ease-in-out;
+                }
+            }
+        }
+
+        .list:hover{
+                border: 2px solid green;
+                padding: 0 12px;
+                transition: all 0.15s ease-in-out;
+
+        }
+
+        .active{
+            border: 2px solid rgb(0, 11, 128);
+            h2{
+                color: rgb(57, 82, 112);
+                font-weight:900;
+            }
+        }
+        .active:hover{
+            border: 2px solid rgb(3, 11, 94);
+        }
+    }
+    
+}
