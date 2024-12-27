@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
+const config = require('./config')
+require('dotenv').config()
 
-mongoose.connect('mongodb+srv://abhisheksharma7124:jobpetKqAtuGusAA@cluster0.xifvoas.mongodb.net/Todo_App')
+// console.log(process.env.Mongodb_Url)
+
+mongoose.connect(process.env.Mongodb_Url)
 
 const todoSchema = new mongoose.Schema({
     id: Number,
