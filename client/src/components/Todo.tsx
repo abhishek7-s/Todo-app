@@ -3,7 +3,7 @@ import { MdEditNote } from "react-icons/md";
 import { MdAdd } from "react-icons/md";
 import "./todo.scss"
 import { useState , useEffect } from 'react';
-
+import { jwtDecode } from 'jwt-decode'
 import { Avatar } from "baseui/avatar";
 import { Input } from "baseui/input";
 import { Button } from "baseui/button";
@@ -12,8 +12,10 @@ import axios from 'axios'
 
 
 interface TodoItem {
+    userId: string;
     id: number;
     task: string;
+    Done: boolean;
   }
 
 function Todo() {
@@ -31,24 +33,36 @@ function Todo() {
   const [task, settask] = useState<String>("")
   const [isEditing, setIsEditing] = useState<Boolean>(false);
   const [editId, setEditId] = useState<number |null>(null);
+  const token = localStorage.getItem("token")
+  const user = jwtDecode(token)
+  const userId = user.userId
 
-
+  console.log(userId)
   useEffect(()=>{
-    setInterval(() => {
-        axios.get('http://localhost:3500/todo')
-          .then( response => {
-            console.log(response.data)
-            settodos(response.data)
-            console.log(todos)
-          })
-          .catch(error => {
-            console.log("error while fetch", error);
-          });
-    }, 1000);
+    let data = JSON.stringify({
+      "userId": userId
+    });
     
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:3500/todo',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    setInterval(() => {
+        axios.request(config)
+          .then((response) => {
+            // console.log(JSON.stringify(response.data));
+            settodos(response.data)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }, 2000);
   } , [])
-  
-
 
   const addTodo = (task: String) => {
     if(task == ""){
@@ -56,6 +70,7 @@ function Todo() {
     }
     if (isEditing) {
         let data = JSON.stringify({
+          "userId": userId,
           "id": editId,
           "task": task
         });
@@ -84,6 +99,7 @@ function Todo() {
 
       } else {
         let data: any = JSON.stringify({
+          "userId": userId,
           "id": Date.now(),
           "task": task
         });
@@ -133,6 +149,7 @@ function Todo() {
   const deleteTodo = (id: number) => {
     console.log(id)
     let data = JSON.stringify({
+      "userId": userId,
       "id": id
     });
     
@@ -166,10 +183,13 @@ function Todo() {
     console.log(ans)
   }
 
-    return (
-    <div className="mainBody">
 
-      
+
+
+    return (
+    <div className="todoSection">
+
+    <div className="mainBody">
       <div className="topSec">
         
             <Avatar
@@ -177,7 +197,7 @@ function Todo() {
                 size="scale1800"
                 src="https://img.icons8.com/?size=100&id=108652&format=png&color=000000"
             />
-          <h2>Good Day Abhi</h2>
+          <h2>Good Day</h2>
         
       </div>
 
@@ -217,6 +237,8 @@ function Todo() {
         ))}
       </div>
     </div>
+    </div>
+
   )
 }
 

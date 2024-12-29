@@ -2,6 +2,16 @@
 
 @use '../scss/variables' as var;
 
+
+.todoSection{
+    background-color: var.$theme;
+    // background-color: rgb(250, 250, 250);
+    height: auto;
+    width: 27vw;
+    @include mix.flex(center,center);
+}
+
+
 .mainBody{
     // background-color: rgb(255, 255, 255);
     // background-color: black;

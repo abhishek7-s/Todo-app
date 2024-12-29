@@ -1,19 +1,18 @@
-import { useState } from 'react'
+import {BrowserRouter , Routes ,Route} from "react-router-dom"
 import './App.scss'
-import Todo from './components/Todo';
+import Home from './pages/Home';
+import Signup from './pages/Signup';
+import Signin from './pages/Singin';
 
 function App() {
-  const [value, setValue] = useState<String>("");
   return (
-    <>
-
-      <div className="mainSec">
-        <div className="todoSection">
-          <Todo/>
-        </div>
-      </div>
-
-    </>
+    <BrowserRouter>
+    <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/signup" element={<Signup/>}/>
+        <Route path="/signin" element={<Signin/>}/>
+    </Routes>
+    </BrowserRouter>
   )
 }
 

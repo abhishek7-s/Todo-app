@@ -1,0 +1,25 @@
+@use '../scss/mixin' as mix;
+@use '../scss/variables' as var;
+
+.mainContent{
+    width: 100vw;
+    height: 100vh;
+    background-color: var.$theme;
+    @include mix.flex(center,center);
+
+    .form{
+        background-color: antiquewhite;
+        color: black;
+        width: 25%;
+        height: 65%;
+        @include mix.flex(start,center);
+        padding: 20px;
+        
+        .submitBtn{
+            margin-top: 15px;
+            width: 100%;
+        }
+
+    }
+
+}
