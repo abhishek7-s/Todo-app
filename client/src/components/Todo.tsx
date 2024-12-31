@@ -3,13 +3,10 @@ import { MdEditNote } from "react-icons/md";
 import { MdAdd } from "react-icons/md";
 import "./todo.scss"
 import { useState , useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'
 import { Avatar } from "baseui/avatar";
 import { Input } from "baseui/input";
 import { Button } from "baseui/button";
-
-import axios from 'axios'
-
+import axiosInstance from "../services/axiosInstance";
 
 interface TodoItem {
     userId: string;
@@ -34,35 +31,40 @@ function Todo() {
   const [isEditing, setIsEditing] = useState<Boolean>(false);
   const [editId, setEditId] = useState<number |null>(null);
   const token = localStorage.getItem("token")
-  const user = jwtDecode(token)
-  const userId = user.userId
+  const user = localStorage.getItem("user")
+  let userdata = JSON.parse(user)
 
-  console.log(userId)
-  useEffect(()=>{
-    let data = JSON.stringify({
-      "userId": userId
-    });
-    
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'http://localhost:3500/todo',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      data : data
-    };
-    setInterval(() => {
-        axios.request(config)
-          .then((response) => {
-            // console.log(JSON.stringify(response.data));
-            settodos(response.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    }, 2000);
-  } , [])
+  if(token){
+    useEffect(()=>{
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+  
+      axiosInstance.get('/todo' , { signal })
+                .then((response) => {
+                  settodos(response.data)
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+                
+  
+      const fetching = setInterval(() => {
+        axiosInstance.get('/todo')
+                .then((response) => {
+                  settodos(response.data)
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+      }, 3000);
+  
+      return () => {
+        clearInterval(fetching)
+        abortController.abort();
+      };
+        
+    } , [])
+  }
 
   const addTodo = (task: String) => {
     if(task == ""){
@@ -70,7 +72,7 @@ function Todo() {
     }
     if (isEditing) {
         let data = JSON.stringify({
-          "userId": userId,
+          // "userId": userId,
           "id": editId,
           "task": task
         });
@@ -78,14 +80,14 @@ function Todo() {
         let config = {
           method: 'put',
           maxBodyLength: Infinity,
-          url: 'http://localhost:3500/update',
+          url: '/update',
           headers: { 
             'Content-Type': 'application/json'
           },
           data : data
         };
         
-        axios.request(config)
+        axiosInstance.request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
         })
@@ -93,13 +95,12 @@ function Todo() {
           console.log(error);
         });
 
-
         setIsEditing(false)
         setEditId(null);
 
       } else {
         let data: any = JSON.stringify({
-          "userId": userId,
+          // "userId": userId,
           "id": Date.now(),
           "task": task
         });
@@ -107,13 +108,13 @@ function Todo() {
         let config:any = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://localhost:3500/add',
+          url: '/add',
           headers: { 
             'Content-Type': 'application/json'
           },
           data : data
         };
-        axios.request(config)
+        axiosInstance.request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
         })
@@ -125,45 +126,27 @@ function Todo() {
     
     settask("")
 
-
-    // if (isEditing) {
-    //   settodos(
-    //     todos.map((todo) =>
-    //       todo.id === editId ? { ...todo, task: task } : todo
-    //     )
-    //   );
-    //   setIsEditing(false)
-    //   setEditId(null);
-    // } else {
-    //   const newTask:TodoItem = {
-    //     "id": Date.now(),
-    //     "task": task,
-    //   }      
-    //   settodos([...todos , newTask]);
-    // }
-    // settask("")
-    // console.log(todos)
   }
 
 
   const deleteTodo = (id: number) => {
     console.log(id)
     let data = JSON.stringify({
-      "userId": userId,
+      // "userId": userId,
       "id": id
     });
     
     let config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: 'http://localhost:3500/remove',
+      url: '/remove',
       headers: { 
         'Content-Type': 'application/json'
       },
       data : data
     };
     
-    axios.request(config)
+    axiosInstance.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
     })
@@ -197,7 +180,7 @@ function Todo() {
                 size="scale1800"
                 src="https://img.icons8.com/?size=100&id=108652&format=png&color=000000"
             />
-          <h2>Good Day</h2>
+          <h2>Good Day {userdata.name}</h2>
         
       </div>
 

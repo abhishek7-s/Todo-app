@@ -1,4 +1,10 @@
 .logBtn{
     position: absolute;
     right: 30px;
+    top: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 15%;
+    color: rgb(82, 82, 82);
 }

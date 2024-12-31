@@ -5,7 +5,8 @@ import { Input } from "baseui/input";
 import { Button } from "baseui/button";
 import BottomWarn from '../components/BottomWarn';
 import { Link , useNavigate } from "react-router-dom"
-import axios from 'axios'
+import axiosInstance from "../services/axiosInstance";
+
 
 function Signup() {
 
@@ -30,17 +31,18 @@ function Signup() {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3500/signup',
+        url: 'signup',
         headers: { 
           'Content-Type': 'application/json'
         },
         data : data
       };
       
-      axios.request(config)
+      axiosInstance.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
         localStorage.setItem("token", response.data.token)
+        localStorage.setItem("user", JSON.stringify(response.data.user))
         navigate("/")
         setName("")
         setEmail("")

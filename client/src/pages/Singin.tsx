@@ -6,6 +6,8 @@ import { Button } from "baseui/button";
 import BottomWarn from '../components/BottomWarn';
 import { Link , useNavigate } from "react-router-dom"
 import axios from 'axios'
+import axiosInstance from "../services/axiosInstance";
+
 
 function Singin() {
 
@@ -25,20 +27,20 @@ function Singin() {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://localhost:3500/signin',
+      url: 'signin',
       headers: { 
         'Content-Type': 'application/json'
       },
       data : data
     };
-    
-    axios.request(config)
+
+    axiosInstance.request(config)
     .then((response) => {
       console.log(response.status);
       console.log(JSON.stringify(response.data));
       localStorage.setItem("token", response.data.token)
+      localStorage.setItem("user", JSON.stringify(response.data.user))
       navigate("/")
-
     })
     .catch((error) => {
       console.log(error);

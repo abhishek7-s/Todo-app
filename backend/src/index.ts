@@ -3,6 +3,8 @@ import { Users , todo } from './db';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode'
+
 
 dotenv.config();
 const app = express();
@@ -30,20 +32,25 @@ app.post('/signup', async (req,res)=>{
             email,
         }, jwt_code)
 
+        let userdata = {
+            "email": email,
+            "name": data.name,
+        }
         res.json({
-            msg: "User Created",
+            user: userdata,
             token: token
         })
 
     } catch (error) {
-        res.json("User not created")   
+        res.status(404).json({
+            msg :"something wrong while creating user",
+            error: error
+        })  
     }
 })
 
 app.post('/signin',async (req,res) => {
     const data = req.body
-    
-
     try {
         const user = await Users.find({
             email:data.email,
@@ -65,8 +72,12 @@ app.post('/signin',async (req,res) => {
                 userId,
                 email,
             }, jwt_code);
-      
+            let userdata = {
+                "email": email,
+                "name": user[0].name,
+            }
             res.json({
+                user: userdata,
                 token: token
             })
             return;
@@ -79,23 +90,37 @@ app.post('/signin',async (req,res) => {
         })
     }
 
-
 })
 
+app.get('/userData' , async (req, res)=>{
+    const data = req.headers.authorization
+    console.log(data)
+    res.json(data)
+})
 
-app.post('/todo', async (req, res) => {
-    const userId = req.body.userId
-    const todos = await todo.find({userId});
-    res.json(todos);
+app.get('/todo', async (req, res) => {
+    try {
+    const token = req.headers.authorization
+    const user = jwtDecode(token);
+    const userId = user.userId
+    // console.log(userId)
+        const todos = await todo.find({userId});
+        res.json(todos);
+    } catch (error) {
+        res.json("not fetched")
+    }
+    
 });
 
 app.post('/add', async (req, res) => {
     try {
         const data = req.body;
-        // console.log(data);
-
+        const token = req.headers.authorization
+        console.log("in add try")
+        console.log(token)
+        const user = jwtDecode(token)
         await todo.create({
-            userId: data.userId,
+            userId: user.userId,
             id: data.id,
             task: data.task,
             Done: false,
@@ -115,7 +140,10 @@ app.post('/add', async (req, res) => {
 });
 
 app.put('/update', async (req, res) => {
-    const {userId, id, task: change } = req.body;
+    const token = req.headers.authorization
+    const user = jwtDecode(token);
+    const userId = user.userId
+    const {id, task: change } = req.body;
 
     await todo.updateOne({userId, id }, { task: change });
 
@@ -125,7 +153,10 @@ app.put('/update', async (req, res) => {
 });
 
 app.delete('/remove', async (req, res) => {
-    const {userId, id } = req.body;
+    const token = req.headers.authorization
+    const user = jwtDecode(token);
+    const userId = user.userId
+    const {id } = req.body;
 
     await todo.deleteOne({userId, id });
 

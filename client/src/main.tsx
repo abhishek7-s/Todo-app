@@ -5,9 +5,12 @@ import { Provider as StyletronProvider } from "styletron-react";
 import { LightTheme, BaseProvider, styled } from "baseui";
 import './index.css'
 import App from './App.tsx'
+import axios from 'axios';
 
 
 const engine = new Styletron();
+
+
 
 
 createRoot(document.getElementById('root')!).render(
